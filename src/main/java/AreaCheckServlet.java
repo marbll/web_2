@@ -1,70 +1,124 @@
-import javax.servlet.RequestDispatcher;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.LinkedList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.LinkedList;
 
 public class AreaCheckServlet extends HttpServlet {
+    private static final LinkedList<Point> points = new LinkedList();
 
-    private static LinkedList<Point> points = new LinkedList<>();
+    public AreaCheckServlet() {
+    }
 
-    public static void clearPoints(){
+    public static void clearPoints() {
         points.clear();
     }
 
-    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String errorMessage = "";
+        String messageType = "Ошибка! ";
+        float y = 66.0F;
 
         try {
-
-            float y = Float.parseFloat(request.getParameter("y"));
-            float r = Float.parseFloat(request.getParameter("r"));
-
-            if (y > 5 || y < -3 || r < 1 || r > 3){
-                throw new Exception();
+            y = Float.parseFloat(request.getParameter("y"));
+            if (y >= 5.0F || y <= -3.0F) {
+                errorMessage = errorMessage + messageType + "Y координата должна быть (-3 ; 5)\n";
             }
 
-            String xNum = "x0"; float nextX;
-            for (int i=0; i<9; i++){
-                try{
-                    xNum = "x" + i;
-                    nextX = Float.parseFloat(request.getParameter(xNum));
-
-                    if (y > 5 || y < -3 ){
-                        throw new Exception();
-                    }
-
-                    Point point = new Point(nextX, y, r);
-                    point.setRes(hitsFigure(nextX, y, r));
-                    point.setExecutionTime( ( System.nanoTime() - Long.parseLong(request.getAttribute("time").toString()) ) / 1000 );
-                    points.add(point);
-
-                }catch (NumberFormatException | NullPointerException e){break;}
-            }
-
-            printTable(response.getWriter());
-        }catch (Exception e){
-            response.getWriter().println("Введенные данные некорректны");
+            try {
+                if (String.valueOf(request.getParameter("y")).split("\\.")[1].length() > 7) {
+                    errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
+                }
+            }catch (ArrayIndexOutOfBoundsException e){}
+        } catch (NumberFormatException var15) {
+            errorMessage = errorMessage + messageType + "Y координата должна быть числом\n";
         }
+
+        float r = 66.0F;
+
+        try {
+            r = Float.parseFloat(request.getParameter("r"));
+            if (r < 1.0F || r > 3.0F) {
+                errorMessage = errorMessage + messageType + "Радиус должен быть [1 ; 3]\n";
+            }
+            try {
+                if (String.valueOf(request.getParameter("r")).split("\\.")[1].length() > 7) {
+                    errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
+                }
+            }catch (ArrayIndexOutOfBoundsException e){}
+        } catch (NumberFormatException var14) {
+            errorMessage = errorMessage + messageType + "Радиус должен быть числом\n";
+        }
+
+        String xNum = "x0";
+        float nextX = 66.0F;
+        String localErrorMessage = "";
+
+        for(int i = 0; i < 9; ++i) {
+            localErrorMessage = "";
+
+            try {
+                xNum = "x" + i;
+                nextX = Float.parseFloat(request.getParameter(xNum));
+                if (nextX > 5.0F || nextX < -3.0F) {
+                    localErrorMessage = localErrorMessage + messageType + "X координата должна быть [-3 ; 5]\n";
+                }
+
+                try {
+                    if (String.valueOf(request.getParameter(xNum)).split("\\.")[1].length() > 7) {
+                        errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
+                    }
+                }catch (ArrayIndexOutOfBoundsException e){}
+            } catch (NumberFormatException var12) {
+                localErrorMessage = localErrorMessage + messageType + "X координата должна быть числом\n";
+            } catch (NullPointerException var13) {
+                break;
+            }
+
+            if (localErrorMessage.equals("")) {
+                Point point = new Point(nextX, y, r);
+                point.setRes(this.hitsFigure(nextX, y, r));
+                point.setExecutionTime((System.nanoTime() - Long.parseLong(request.getAttribute("time").toString())) / 1000L);
+                points.add(point);
+                messageType = "Предупреждение (неверные данные на дополнительных X координатах)... ";
+            } else {
+                errorMessage = errorMessage + localErrorMessage;
+            }
+        }
+
+        if (!errorMessage.equals("")) {
+            response.getWriter().println(errorMessage);
+        } else {
+            printTable(response.getWriter());
+        }
+
     }
 
-    private boolean hitsFigure(float x, float y, float r){
-        return ((x * x + y * y) <= r/2 * r/2 && x <= 0 && y <= 0) || (y > (x - r) && x >= 0 && y <= 0) || (x<=0 && y>=0 && x>=-r && y<=r );
+    public void doHead(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        clearPoints();
     }
 
-    static void printTable(PrintWriter out){
-        for (Point point: points){
+    private boolean hitsFigure(float x, float y, float r) {
+        return x * x + y * y <= r / 2.0F * r / 2.0F && x <= 0.0F && y <= 0.0F || y > x - r && x >= 0.0F && y <= 0.0F || x <= 0.0F && y >= 0.0F && x >= -r && y <= r;
+    }
+
+    static void printTable(PrintWriter out) {
+        Iterator var1 = points.iterator();
+
+        while(var1.hasNext()) {
+            Point point = (Point)var1.next();
             out.println("<tr>");
             out.println("<td>" + point.getX() + "</td>");
             out.println("<td>" + point.getY() + "</td>");
             out.println("<td>" + point.getR() + "</td>");
             out.println("<td>" + point.getRes() + "</td>");
             out.println("<td>" + point.getRequestTime() + "</td>");
-            out.println("<td>" + point.getExecutionTime() + " мкс" + "</td>");
+            out.println("<td>" + point.getExecutionTime() + "</td>");
             out.println("</tr>");
         }
+
     }
 }

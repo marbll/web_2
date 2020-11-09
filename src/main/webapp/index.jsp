@@ -63,26 +63,25 @@
 
     <div id="answer">
 
+        <img id="answerAnime" src="img/anime.png" alt="">
+
         <p id="textCloud">Нажмите на мою голову, чтоб увидеть таблицу ^_^</p>
 
         <audio id="tits" src="sound/sound.m4a"></audio>
         <audio id="leftJopa" src="sound/sound1.m4a"></audio>
         <audio id="rightJopa" src="sound/sound2.m4a"></audio>
 
-        <img id="answerAnime" src="img/anime.png">
 
-        <div id="controlButtonWrapper">
-            <button class="erotic" id="tyankaHead"></button>
-            <button class="erotic" id="titsControl"></button>
-            <button class="erotic" id="leftJopaControl"></button>
-            <button class="erotic" id="rightJopaControl"></button>
-        </div>
+        <button class="erotic" id="tyankaHead"></button>
+        <button class="erotic" id="titsControl"></button>
+        <button class="erotic" id="leftJopaControl"></button>
+        <button class="erotic" id="rightJopaControl"></button>
 
 
     </div>
 
     <div id="formWrapper">
-        <form method="post" action="">
+        <form method="post">
             <h3>Выберите X:</h3>
             <div id="wrapperX">
                 <input id="x1" type="checkbox" name="X" value="3"><label for="x1">3</label>
@@ -121,7 +120,7 @@
         <th>R</th>
         <th>Результат</th>
         <th>Время обращения</th>
-        <th>Время выполнения</th>
+        <th>Время выполнения, мкс</th>
     </tr>
     <tbody id="answerBody"></tbody>
 </table>

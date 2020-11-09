@@ -5,8 +5,8 @@ svg.addEventListener("click", (event)=>{
         textCloud.innerText = "Семпай, а где R??\n ヽ( ﾟ〇ﾟ)ﾉ";
     }else {
         let xArr = new Array(1);
-        xArr[0] = (event.offsetX - 225)/150 * rSelected[0].value;
-        sendPoint(xArr, -(event.offsetY - 225)/150 * rSelected[0].value, rSelected[0].value);
+        xArr[0] = Number( (event.offsetX - 225)/150 * rSelected[0].value).toFixed(7);
+        sendPoint(xArr, Number(-(event.offsetY - 225)/150 * rSelected[0].value).toFixed(7), rSelected[0].value);
         let x = xArr[0];
         let y = -(event.offsetY - 225)/150 * rSelected[0].value;
         let r = rSelected[0].value;
@@ -16,7 +16,6 @@ svg.addEventListener("click", (event)=>{
         else{
             textCloud.innerText = "Как жаль,\n вы не попали \nв фигуру\n(╥﹏╥) "
         }
-        //console.log( (event.offsetX - 225)/150 * rSelected[0].value, -(event.offsetY - 225)/150 * rSelected[0].value);
         svg.innerHTML += "<circle r=\"4\" cx=" + event.offsetX + " cy=" + event.offsetY + " fill=#f2c8aa></circle>";
     }
 });
@@ -28,6 +27,7 @@ let answerBody = document.getElementById("answerBody");
 
 mainForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    //mainForm.submit();
     let xChecked = document.querySelectorAll("#wrapperX input:checked");
 
     if (xChecked.length === 0){
@@ -36,22 +36,18 @@ mainForm.addEventListener("submit", (event) => {
         let yField = document.querySelector("#wrapperY input");
         let y = yField.value;
         let afterDot = (y.toString().includes('.')) ? (y.toString().split('.').pop().length) : (0);
-        if(isFinite(y) && afterDot>10){
-            textCloud.innerText = "Семпай, не вводи мне больше 11 \nцифр после запятой, умоляю!! \n(♡-_-♡)";
+        if(isFinite(y) && afterDot>7){
+            textCloud.innerText = "Семпай, не вводи мне больше 7 \nцифр после запятой, умоляю!! \n(♡-_-♡)";
         }else {
             if (isFinite(y)) {
                 if (y > -3 && y < 5){
                     if (y != "") {
-                        y = Number(y).toFixed(10);
+                        y = Number(y).toFixed(7);
                         let rSelected = document.querySelectorAll("#wrapperR input:checked");
                         if (rSelected.length === 0){
                             textCloud.innerText = "Семпай, а где R??\n ヽ( ﾟ〇ﾟ)ﾉ";
                         }else{
                             let r = rSelected[0].value;
-                            /*let result = document.getElementById("writingResult");
-                            $.get("send.php", {x: x, y: y, r: r}, function (data, status) {
-                                result.innerHTML = data;
-                            });*/
                             let xCount = 0;
                             let x;
                             for (let i=0; i<xChecked.length; i++){
@@ -73,10 +69,8 @@ mainForm.addEventListener("submit", (event) => {
                                 xArr[i] = x;
                                 svg.innerHTML += "<circle r=\"4\" cx=" + (x*150/r + 225) + " cy=" + (-y*150/r + 225) + " fill=#f2c8aa></circle>";
                             }
+                            //console.log(xArr, y, r);
                             sendPoint(xArr, y, r);
-                            /*$([document.documentElement, document.body]).animate({
-                                scrollTop: $("#anchor").offset().top
-                            }, 1000);*/
                         }
                     } else {
                         textCloud.innerText = "Серьезно, ничего??!! (◣_◢)\n Я разочарована. \nПроверь свой Y и возвращайся";

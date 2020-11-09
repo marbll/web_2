@@ -10,7 +10,7 @@ public class Point implements Serializable {
     private final LocalDateTime requestTime;
     private long executionTime;
 
-    Point(float x, float y, float r){
+    Point(float x, float y, float r) {
         this.x = x;
         this.y = y;
         this.r = r;
@@ -18,15 +18,15 @@ public class Point implements Serializable {
     }
 
     public float getX() {
-        return x;
+        return this.x;
     }
 
     public float getY() {
-        return y;
+        return this.y;
     }
 
     public float getR() {
-        return r;
+        return this.r;
     }
 
     public void setRes(boolean res) {
@@ -34,11 +34,11 @@ public class Point implements Serializable {
     }
 
     public boolean getRes() {
-        return res;
+        return this.res;
     }
 
     public LocalDateTime getRequestTime() {
-        return requestTime;
+        return this.requestTime;
     }
 
     public void setExecutionTime(long executionTime) {
@@ -46,45 +46,37 @@ public class Point implements Serializable {
     }
 
     public long getExecutionTime() {
-        return executionTime;
+        return this.executionTime;
     }
 
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        } else if (o != null && this.getClass() == o.getClass()) {
+            Point that = (Point)o;
+            if (this.x != that.x) {
+                return false;
+            } else if (this.y != that.y) {
+                return false;
+            } else if (this.r != that.r) {
+                return false;
+            } else if (this.res != that.res) {
+                return false;
+            } else if (!this.requestTime.equals(that.requestTime)) {
+                return false;
+            } else {
+                return this.executionTime == that.executionTime;
+            }
+        } else {
             return false;
         }
-
-        Point that = (Point) o;
-
-        if (x != that.x) { return false; }
-        if (y != that.y) { return false; }
-        if (r != that.r) { return false; }
-        if (res != that.res) { return false; }
-        if (!requestTime.equals(that.requestTime)) { return false; }
-        if (executionTime != that.executionTime) { return false; }
-
-        return true;
-
     }
 
-    @Override
     public int hashCode() {
-        return Objects.hash(x, y, r, res, requestTime, executionTime);
+        return Objects.hash(new Object[]{this.x, this.y, this.r, this.res, this.requestTime, this.executionTime});
     }
 
-    @Override
     public String toString() {
-        return "Point{" +
-                "x='" + x + '\'' +
-                "y='" + y + '\'' +
-                "r='" + r + '\'' +
-                "res='" + res + '\'' +
-                "requestTime'" + requestTime + '\'' +
-                "executionTime'" + executionTime + '\'' +
-                '}';
+        return "Point{x='" + this.x + '\'' + "y='" + this.y + '\'' + "r='" + this.r + '\'' + "res='" + this.res + '\'' + "requestTime'" + this.requestTime + '\'' + "executionTime'" + this.executionTime + '\'' + '}';
     }
 }

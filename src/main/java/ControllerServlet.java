@@ -47,7 +47,7 @@ public class ControllerServlet extends HttpServlet {
                 PrintWriter out = response.getWriter();
                 AreaCheckServlet.printTable(out);
             }
-        } catch (NullPointerException var5) {
+        } catch (NullPointerException e) {
             RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
             dispatcher.forward(request, response);
         }

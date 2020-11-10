@@ -33,7 +33,7 @@ public class AreaCheckServlet extends HttpServlet {
                     errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
                 }
             }catch (ArrayIndexOutOfBoundsException e){}
-        } catch (NumberFormatException var15) {
+        } catch (NumberFormatException e) {
             errorMessage = errorMessage + messageType + "Y координата должна быть числом\n";
         }
 
@@ -49,10 +49,11 @@ public class AreaCheckServlet extends HttpServlet {
                     errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
                 }
             }catch (ArrayIndexOutOfBoundsException e){}
-        } catch (NumberFormatException var14) {
+        } catch (NumberFormatException e) {
             errorMessage = errorMessage + messageType + "Радиус должен быть числом\n";
         }
 
+        String xrError = errorMessage;
         String xNum = "x0";
         float nextX = 66.0F;
         String localErrorMessage = "";
@@ -72,13 +73,13 @@ public class AreaCheckServlet extends HttpServlet {
                         errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
                     }
                 }catch (ArrayIndexOutOfBoundsException e){}
-            } catch (NumberFormatException var12) {
+            } catch (NumberFormatException e) {
                 localErrorMessage = localErrorMessage + messageType + "X координата должна быть числом\n";
-            } catch (NullPointerException var13) {
+            } catch (NullPointerException e) {
                 break;
             }
 
-            if (localErrorMessage.equals("")) {
+            if (localErrorMessage.equals("") && xrError.equals("")) {
                 Point point = new Point(nextX, y, r);
                 point.setRes(this.hitsFigure(nextX, y, r));
                 point.setExecutionTime((System.nanoTime() - Long.parseLong(request.getAttribute("time").toString())) / 1000L);
@@ -106,10 +107,10 @@ public class AreaCheckServlet extends HttpServlet {
     }
 
     static void printTable(PrintWriter out) {
-        Iterator var1 = points.iterator();
+        Iterator iter = points.iterator();
 
-        while(var1.hasNext()) {
-            Point point = (Point)var1.next();
+        while(iter.hasNext()) {
+            Point point = (Point)iter.next();
             out.println("<tr>");
             out.println("<td>" + point.getX() + "</td>");
             out.println("<td>" + point.getY() + "</td>");

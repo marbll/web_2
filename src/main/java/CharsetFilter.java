@@ -15,7 +15,7 @@ public class CharsetFilter implements Filter {
                 response.setContentType("text/html; charset=UTF-8");
                 response.setCharacterEncoding("UTF-8");
             }
-        } catch (NullPointerException var8) {
+        } catch (NullPointerException e) {
         } finally {
             next.doFilter(request, response);
         }

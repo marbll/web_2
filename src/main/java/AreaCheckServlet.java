@@ -27,12 +27,9 @@ public class AreaCheckServlet extends HttpServlet {
             if (y >= 5.0F || y <= -3.0F) {
                 errorMessage = errorMessage + messageType + "Y координата должна быть (-3 ; 5)\n";
             }
-
-            try {
-                if (String.valueOf(request.getParameter("y")).split("\\.")[1].length() > 7) {
-                    errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
-                }
-            }catch (ArrayIndexOutOfBoundsException e){}
+            if (request.getParameter("y").length() > 1 && request.getParameter("y").split("\\.")[1].length() > 7) {
+                errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
+            }
         } catch (NumberFormatException e) {
             errorMessage = errorMessage + messageType + "Y координата должна быть числом\n";
         }
@@ -44,11 +41,9 @@ public class AreaCheckServlet extends HttpServlet {
             if (r < 1.0F || r > 3.0F) {
                 errorMessage = errorMessage + messageType + "Радиус должен быть [1 ; 3]\n";
             }
-            try {
-                if (String.valueOf(request.getParameter("r")).split("\\.")[1].length() > 7) {
-                    errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
-                }
-            }catch (ArrayIndexOutOfBoundsException e){}
+            if (request.getParameter("r").length() > 1 && request.getParameter("r").split("\\.")[1].length() > 7) {
+                errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
+            }
         } catch (NumberFormatException e) {
             errorMessage = errorMessage + messageType + "Радиус должен быть числом\n";
         }
@@ -59,6 +54,7 @@ public class AreaCheckServlet extends HttpServlet {
         String localErrorMessage = "";
 
         for(int i = 0; i < 9; ++i) {
+
             localErrorMessage = "";
 
             try {
@@ -68,11 +64,10 @@ public class AreaCheckServlet extends HttpServlet {
                     localErrorMessage = localErrorMessage + messageType + "X координата должна быть [-3 ; 5]\n";
                 }
 
-                try {
-                    if (String.valueOf(request.getParameter(xNum)).split("\\.")[1].length() > 7) {
-                        errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
-                    }
-                }catch (ArrayIndexOutOfBoundsException e){}
+                if (request.getParameter("r").length() > 1 && request.getParameter(xNum).split("\\.")[1].length() > 7) {
+                    errorMessage = errorMessage + messageType + "Нельзя вводить более 7 цифр в дробной части числа";
+                }
+
             } catch (NumberFormatException e) {
                 localErrorMessage = localErrorMessage + messageType + "X координата должна быть числом\n";
             } catch (NullPointerException e) {
